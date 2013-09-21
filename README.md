@@ -18,6 +18,8 @@ After importing the project into Eclipse, it is necessary to link project depend
 1. Choose the freshly-created dependency project from the list.
 1. Click ok.
 
+Also: ensure that the project and project libraries are set to the proper build targets. The main project should be set to 16 (Google APIs) at least, and android-mapviewballoons must be set to a Google APIs target (such as 18). ActionBarSherlock must be set to API 14 at minimum. The simplest solution is to ensure all three projects are set to the same build target.
+
 ## Changelog
 
 ### v2.1.1
