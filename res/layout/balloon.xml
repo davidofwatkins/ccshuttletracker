@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- PaddingBottom will be set to 0 programmatically if the snippet text is empty -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:orientation="horizontal" 
+	android:paddingBottom="20dip"
+	android:paddingLeft="15dip" 
+	android:minWidth="100dip" 
+	android:id="@+id/balloon_main_layout"
+	android:background="@drawable/balloon_bg_selector"
+	android:paddingTop="6dip"
+	android:paddingRight="5dip"
+	android:textColor="#FFFFFF">
+
+    <LinearLayout
+        android:id="@id/balloon_inner_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+        
+        <TextView
+            android:id="@+id/balloon_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dip"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:paddingTop="4dip" />
+        
+        <TextView
+            android:id="@+id/balloon_snippet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:gravity="center_horizontal"
+            android:textSize="12dip" />
+        
+    </LinearLayout>
+	
+	<ImageView
+	    android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:src="@drawable/ic_clear_normal"
+		android:id="@id/balloon_close" 
+		android:paddingLeft="10dip"
+		android:paddingBottom="0dip" 
+		android:paddingRight="0dip"
+		android:paddingTop="0dip" />
+
+</LinearLayout>

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Quarry Shuttle Schedule</title>
+<link rel="stylesheet" type="text/css" href="ccstracker-styling.css" />
+<script src="jquery.js"></script>
+<script src="ccstracker-stylinghelper.js"></script>
+<script src="jumptotime.js"></script>
+
+<style>
+    table tr:nth-child(odd):not(.floating) { background: #3A0F3A; }
+</style>
+
+</head>
+
+<body>
+	<table id="floater">
+		<tr class="floating"><td>Quarry</td><td>Campus</td></tr>
+	</table>
+    <table style="display: none;"><tr><td>7:05 AM</td></tr></table>
+	<h1>Mon-Fri, 7:05 AM - 8:50 PM</h1>
+	<table id="weekday" class="hasheader">
+    	<tr class="floating"><td>Quarry</td><td>Campus</td></tr>
+        <tr><td>7:05 AM</td><td>7:20 AM</td></tr>
+        <tr><td>7:35 AM</td><td>7:50 AM</td></tr>
+        <tr><td>8:05 AM</td><td>8:20 AM</td></tr>
+        <tr><td>8:35 AM</td><td>8:50 AM</td></tr>
+        <tr><td>9:05 AM</td><td>9:20 AM</td></tr>
+        <tr><td>9:35 AM</td><td>9:50 AM</td></tr>
+        <tr><td>10:05 AM</td><td>10:20 AM</td></tr>
+        <tr><td>10:35 AM</td><td>10:50 AM</td></tr>
+        <tr><td>11:05 AM</td><td>11:20 AM</td></tr>
+        <tr><td>11:35 AM</td><td>11:50 AM</td></tr>
+        <tr><td>12:05 PM</td><td>12:20 PM</td></tr>
+        <tr><td>12:35 PM</td><td>12:50 PM</td></tr>
+        <tr><td>1:05 PM</td><td>1:20 PM</td></tr>
+        <tr><td>1:35 PM</td><td>1:50 PM</td></tr>
+        <tr><td>2:05 PM</td><td>2:20 PM</td></tr>
+        <tr><td>2:35 PM</td><td>2:50 PM</td></tr>
+        <tr><td>3:05 PM</td><td>3:20 PM</td></tr>
+        <tr><td>3:35 PM</td><td>3:50 PM</td></tr>
+        <tr><td>4:05 PM</td><td>4:20 PM</td></tr>
+        <tr><td>4:35 PM</td><td>4:50 PM</td></tr>
+        <tr><td>5:05 PM</td><td>5:20 PM</td></tr>
+        <tr><td>5:35 PM</td><td>5:50 PM<span class="asterisks">**</span></td></tr>
+        <tr><td>6:05 PM</td><td>6:20 PM</td></tr>
+        <tr><td>6:35 PM</td><td>6:50 PM</td></tr>
+        <tr><td>7:05 PM</td><td>7:20 PM</td></tr>
+        <tr><td>7:35 PM</td><td>7:50 PM</td></tr>
+        <tr><td>8:05 PM</td><td>8:20 PM</td></tr>
+        <tr><td>8:35 PM</td><td>8:50 PM</td></tr>
+    </table>
+    <h1>Mon-Thurs Late Night<br />9:10 PM - 12:20 AM</h1>
+    <table id="latenight">
+        <tr class="floating" style="font-size: 0.8em;"><td>Campus</td><td>Spinner</td><td>Campus</td><td>Quarry</td><td>Campus</td><td>Lakeside</td></tr>
+        <tr><td>9:10</td><td>9:20</td><td>9:30</td><td>9:40</td><td>9:50</td><td>10:00</td></tr>
+        <tr><td>10:10</td><td>10:20</td><td>-</td><td>10:30</td><td>10:40</td><td>10:50</td></tr>
+        <tr><td>11:00</td><td>11:10</td><td>-</td><td>11:20</td><td>11:30</td><td>11:40</td></tr>
+        <tr><td>11:50</td><td>12:00 AM</td><td>-</td><td>12:10 AM</td><td>12:20 AM</td><td><i>No Stop</i></td></tr>
+    </table>
+    <h1>Weekend Service (Sat/Sun)<br />11:00 AM - 8:30 PM</h1>
+    <table id="weekend">
+        <tr class="floating"><td>Spinner</td><td>Quarry</td><td>Campus</td><td>Lakeside</td></tr>
+        <tr><td>11:00 AM</td><td>11:15 AM</td><td>11:30 AM</td><td>11:45 AM</td></tr>
+        <tr><td>Noon</td><td>12:15 PM</td><td>12:30 PM</td><td>12:45 PM</td></tr>
+        <tr><td>1:00 PM</td><td>1:15 PM</td><td>1:30 PM</td><td>1:45 PM</td></tr>
+        <tr><td>2:00 PM</td><td>2:15 PM</td><td>2:30 PM</td><td>2:45 PM</td></tr>
+        <tr><td>3:00 PM</td><td>3:15 PM</td><td>3:30 PM</td><td>3:45 PM</td></tr>
+        <tr><td>4:00 PM</td><td>4:15 PM</td><td>4:30 PM</td><td>4:45 PM</td></tr>
+        <tr><td>5:00 PM</td><td>5:15 PM</td><td>5:30 PM</td><td>5:45 PM</td></tr>
+        <tr><td>6:00 PM</td><td>6:15 PM</td><td>6:30 PM</td><td>6:45 PM</td></tr>
+        <tr><td>7:00 PM</td><td>7:15 PM</td><td>7:30 PM</td><td>7:45 PM</td></tr>
+        <tr><td>No Stop</td><td>No Stop</td><td>8:00 PM</td><td>No Stop</td></tr>
+        <tr><td>No Stop</td><td>8:15 PM</td><td>No Stop</td><td>No Stop</td></tr>
+        <tr><td>8:30 PM</td><td></td><td></td><td></td></tr>
+    </table>
+	<div id="addendum">**Drop-Off Only</div>
+</body>
+</html>

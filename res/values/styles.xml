@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	
+	<!-- Colors -->
+	<color name="translucent_black">#90000000</color>
+	<color name="brown">#422401</color>
+    <color name="darkbrown">#331B00</color>
+    <color name="green">#218200</color>
+    <color name="gray">#242424</color>
+	
+    <!-- "android:" prefixes are for native 4.0+ ActionBars; non-prefixed properties are for older devices using ABS -->
+    
+	<!-- Map Action Bar -->
+	<!-- <style name="ShuttleMapTheme" parent="Theme.Sherlock.ForceOverflow"> See: http://stackoverflow.com/questions/12875081/actionbarsherlock-forceoverflow-resource-not-found-->
+	<style name="ShuttleMapTheme" parent="Theme.Sherlock">
+	    <item name="android:windowActionBarOverlay">true</item>
+	    <item name="windowActionBarOverlay">true</item>
+	    <!--Cannot adjust ActionBar background directly from here (like below); must use android:actionBarStyle
+	    <item name="android:background">@color/translucent_black</item>
+	    <item name="background">@color/translucent_black</item>-->
+	    <item name="android:titleTextStyle">@style/CustomTitle</item>
+	    <item name="titleTextStyle">@style/CustomTitle</item>
+    	<item name="android:actionBarStyle">@style/MapActionBarStyle</item>
+    	<item name="actionBarStyle">@style/MapActionBarStyle</item>
+	</style>
+	
+		<!-- Map Action Bar Title -->
+		<style name="CustomTitle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+			<item name="android:textColor">#FFFFFF</item>
+		</style>
+		
+		<!-- Map Action Bar Style -->
+		<style name="MapActionBarStyle" parent="Widget.Sherlock.ActionBar">
+		    <item name="android:background">@color/translucent_black</item>
+		    <item name="background">@color/translucent_black</item>
+		</style>
+	
+	<!-- Schedules Action Bar -->
+	<!-- <style name="ShuttleScheduleTheme" parent="Theme.Sherlock.ForceOverflow"> -->
+	<style name="ShuttleScheduleTheme" parent="Theme.Sherlock">
+	    <!--<item name="android:background">@color/gray</item>
+	    <item name="background">@color/gray</item>-->
+	    <item name="android:actionBarStyle">@style/SchedulesActionBarStyle</item>
+    	<item name="actionBarStyle">@style/SchedulesActionBarStyle</item>
+	    <item name="android:actionBarTabBarStyle">@style/CustomTabsBar</item>
+	    <item name="actionBarTabBarStyle">@style/CustomTabsBar</item>
+	    <item name="android:actionBarTabStyle">@style/CustomTabs</item>
+	    <item name="actionBarTabStyle">@style/CustomTabs</item>
+	</style>
+	
+		
+		<!-- Schedules Action Bar Styling -->
+		<style name="SchedulesActionBarStyle" parent="Widget.Sherlock.ActionBar">
+		    <item name="android:background">@color/gray</item>
+		    <item name="background">@color/gray</item>
+		</style>
+		
+		<!-- Tab Bar Styling -->
+	    <style name="CustomTabsBar" parent="Widget.Sherlock.ActionBar.TabBar">
+		    <item name="android:background">#000000</item>
+		    <item name="background">#000000</item>
+		</style>
+		
+		<!-- Tabs Styling -->
+	    <style name="CustomTabs" parent="Widget.Sherlock.ActionBar.TabView">
+		    <item name="android:background">@drawable/actionbar_tab_bg</item>
+		    <item name="background">@drawable/actionbar_tab_bg</item>
+		</style>
+	
+	<!-- ABS Notes: http://actionbarsherlock.com/theming.html -->
+	<!-- For coloring tabs: http://stackoverflow.com/questions/8647836/how-to-change-the-colour-of-actionbar-navigation-tabs -->
+	
+</resources>

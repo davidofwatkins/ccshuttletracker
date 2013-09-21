@@ -1,0 +1,137 @@
+@charset "utf-8";
+/* CSS Document */
+
+*{ margin: 0; padding: 0; position: relative; }
+	body {
+		background: black;
+		color: #CCC;
+		font-size: 20px;
+		font-weight: normal;
+		overflow-x: hidden;
+	}
+	h1 {
+		font-size: 20px;
+		text-align: center;
+		padding: 5px 2px;
+		background: #666;
+		color: black;
+		border-top: 3px solid #fcb32f;/* #090; */
+		z-index: 10;
+	}
+	h1:first-of-type {
+		border: 0px;
+		margin-top: 0;
+	}
+	table {
+		width: 100%;
+		border: 0px;
+		margin: 0 auto;
+		border-collapse: collapse;
+		background: black;
+		z-index: 10;
+	}
+	
+	table.hasheader {
+		z-index: 0;
+	}
+		
+		
+	table tr td {
+		text-align: center;
+		padding: 3px;
+	}
+	table tr:nth-child(1) {
+		color: white;
+	}
+	table tr:nth-child(1) td {
+		padding-top: 5px;
+	}
+	table tr:nth-child(2) td {
+		padding-top: 20px;
+	}
+	table tr td:nth-child(1) {
+		text-align: left;
+		padding-left: 15px;
+	}
+	table tr td:nth-last-child(1) {
+		text-align: right;
+		padding-right: 15px;
+	}
+	
+	table tr:nth-child(odd) {
+		background: #02203F; /* used to be #036; */ 
+	}
+	
+	table tr:nth-child(1) { background: #333; }
+	
+	p#msg {
+		font-size: 17px;
+		margin: 20px;
+		text-align: center;
+	}
+	p#footer {
+		font-size: 13px;
+		text-align: center;
+		margin-top: 7px;
+	}
+	
+	div#addendum {
+		padding: 5px;
+		font-size: 14px;
+		background: #333; /* #fcb32f */
+		text-align: center;
+		font-weight: bold;
+		box-shadow: 0 0 10px #000;
+		z-index: 10;
+	}
+	
+	span.asterisks, div#addendum { color: #fcb32f; }
+	
+	/* Floater CSS */
+	
+	/*.floatingheader, #floatingheader {
+		position: fixed;
+		top: 0;
+		margin: 0;
+		background: red;
+		width: 100%;
+		background: red;
+		height: 0;
+		z-index: 10;
+	}
+	
+	#floaterwrapper {
+		overflow: hidden;
+	}*/
+	
+	/*
+		NOTES ABOUT FLOATING HEADERS:
+		
+		Using CSS, each schedule can have one floating header for one of the tables.
+		To enable this, prepend a <table id="floater">...</table> to the body with the desired
+		floated header contents (e.g., <tr><td>Spinner</td><td>Campus</td></tr>). This floater
+		will have a z-index of 5, while all h1's and tables have a default z-index of 10. To
+		override this for the one table where the floated header will appear, give it the class
+		"hasheader."
+	
+	*/
+	
+	table.hasheader tr:nth-child(1) {
+		z-index: 10 !important;
+	}
+	
+	#floater {
+		position: fixed;
+		top: 0;
+		margin: 0;
+		width: 100%;
+		height: 0;
+		z-index: 5;
+		overflow: hidden;
+		background: #333;
+		box-shadow: 0 0 20px #000;
+	}
+	
+#nextstoptime {
+	/*color: #2FD911;*/
+}

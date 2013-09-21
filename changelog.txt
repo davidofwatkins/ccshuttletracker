@@ -1,0 +1,42 @@
+**************
+* Changelog: *
+**************
+
+v1.5:
+
+-Icon sizes now adjust depending on map zoom level
+-Added bus stop icons
+-Moved shuttle schedule information to a drawer at the bottom of the map
+-Restylized schedule data
+-Fixed problems with multiple "No Connection" and "No Shuttle" messages
+-Increased shuttle location update frequency
+-Removed 3rd party proxy for "View Online" link to shuttle data on champlain.edu
+-Added "About" page for more information about CC Shuttle Tracker
+
+v2.0:
+
+-Swipable Schedule tabs
+-Added ability to change map mode (setSatellite(), etc.)
+-Added tap-to-zoom
+-Added "refresh" button
+-Added "satelllite view" button
+-Updated schedule data
+-Added new high-resolution icons
+-Added Balloon pop-ups when tapping on busses and stops (https://groups.google.com/group/android-developers/browse_thread/thread/3a33e5a2cd3d6b0d)
+
+v2.1
+-Added automatic "scroll to current time" on shuttle schedule
+-Updated ActionBarSherlock to v4.0
+-Updated v4 support package to revision 9
+-Updated schedule data
+-Added "Center to Burlington" button
+
+**************
+*   ToDo:    *
+**************
+
+v2.5
+
+-Show routes on map?
+-Enable double tapping with two fingers to zoom out
+-Enable alerts for busses X miles away from chosen destination

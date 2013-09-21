@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="dwat.ccshuttletracker"
+      android:versionCode="6"
+      android:versionName="2.1.1">
+    
+    <uses-sdk android:minSdkVersion="7"
+        android:targetSdkVersion="18" />
+    
+    <uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <application android:icon="@drawable/launcher_icon"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Sherlock"
+        android:allowBackup="true" >
+        <activity android:name=".Map"
+            android:theme="@style/ShuttleMapTheme"
+			android:label="@string/app_name"
+			android:configChanges="orientation|keyboardHidden"
+			android:windowActionBarOverlay="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".HTMLDisplayer" />
+        <activity android:name=".Schedules"
+            android:theme="@style/ShuttleScheduleTheme" />
+        
+		<uses-library android:name="com.google.android.maps" />
+    </application>
+    
+</manifest>
