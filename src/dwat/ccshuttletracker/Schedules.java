@@ -7,13 +7,12 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 /**
  * Schedule displayer Activity that holds a ViewPager for all schedules
@@ -22,7 +21,7 @@ import com.actionbarsherlock.view.MenuItem;
  * @version 2.1.1
  * @since 9/20/13
  */
-public class Schedules extends SherlockFragmentActivity {
+public class Schedules extends ActionBarActivity {
     
 	private ActionBar abar;
 	
@@ -71,7 +70,7 @@ public class Schedules extends SherlockFragmentActivity {
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
     	
-		MenuInflater inflater = getSupportMenuInflater();
+		MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.schedulesmenu, menu);
         return true;
 	}

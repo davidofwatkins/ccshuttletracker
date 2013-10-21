@@ -4,12 +4,11 @@ import java.util.HashMap;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.webkit.WebView;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 
 /**
  * An Activity that displays a specified webpage in a WebView
@@ -18,7 +17,7 @@ import com.actionbarsherlock.view.MenuItem;
  * @version 2.1.1
  * @since 9/20/13
  */
-public class HTMLDisplayer extends SherlockFragmentActivity {
+public class HTMLDisplayer extends ActionBarActivity {
 	
 	@Override
 	public void onCreate (Bundle savedInstanceState) {

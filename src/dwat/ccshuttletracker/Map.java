@@ -14,13 +14,13 @@ import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockMapActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
 
@@ -33,7 +33,7 @@ import com.google.android.maps.OverlayItem;
  * @since 9/20/13
  *
  */
-public class Map extends SherlockMapActivity {
+public class Map extends ActionBarActivity {
 
 	private final int REFRESH_INTERVAL_IN_SEC = 5;
 	public static final int ZOOMLEVEL_MEDIUM_BUSSES = 17;
@@ -180,14 +180,14 @@ public class Map extends SherlockMapActivity {
 		}
 	}
 	
-	@Override
+	//@Override
 	protected boolean isRouteDisplayed() {
 		return false;
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getSupportMenuInflater();
+		MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.mainmenu, menu);
         return true;
 	}

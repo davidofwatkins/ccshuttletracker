@@ -9,14 +9,16 @@ Available on the Play Store: <https://play.google.com/store/apps/details?id=dwat
 
 ## Project Setup in Eclipse
 
-After importing the project into Eclipse, it is necessary to link project dependencies (ActionBarSherlock and android-mapviewballoons). To do this, you must import them as projects into the Eclipse workspace, as follows:
+After importing the project into Eclipse, it is necessary to link project dependencies (Support v7 AppCompat and android-mapviewballoons). To do this, you must import them as projects into the Eclipse workspace, as follows:
 
-1. Right-click in Eclipse's Package Explorer and choose New > Other > Android > Android Project from Existing Code and click Next.
-1. Next to Root Directory, choose "Browse" and navigate to <Project-Folder>/libs/ActionBarSherlock/ or <Project-Folder>/libs/android-mapviewballoons/ and click ok. This will create a project in Eclipse for the given dependency.
+1. Go to File > Import and then Android > Android Project from Existing Code. Click Next.
+1. Next to Root Directory, choose "Browse" and navigate to the dependency folder. The AppCompat library is located in the Android SDK at <sdk>/extras/android/compatibility/appcompat, and the MapView Balloons extension is included in this project at <project>/libs/android-mapviewballoons.
 1. Right click the CC Shuttle Tracker project and choose properties > Android.
 1. Click "Add" under the Library section.
 1. Choose the freshly-created dependency project from the list.
 1. Click ok.
+
+For more information for importing the v7 AppCompat library, [see here](http://www.begincodingnow.com/tutorial/adding-action-bar-support-library-to-apps-running-on-android-2-1/).
 
 Also: ensure that the project and project libraries are set to the proper build targets. The main project should be set to 16 (Google APIs) at least, and android-mapviewballoons must be set to a Google APIs target (such as 18). ActionBarSherlock must be set to API 14 at minimum. The simplest solution is to ensure all three projects are set to the same build target.
 

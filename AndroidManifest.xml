@@ -12,7 +12,7 @@
     
     <application android:icon="@drawable/launcher_icon"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Sherlock"
+        android:theme="@style/Theme.AppCompat"
         android:allowBackup="true" >
         <activity android:name=".Map"
             android:theme="@style/ShuttleMapTheme"

@@ -10,10 +10,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.Tab;
+import android.support.v7.app.ActionBarActivity;
 
 /**
  * A FragmentPagerAdapter that also implements ActionBar.TabListener and
@@ -47,7 +46,7 @@ public class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabLi
 	public TabsAdapter(Activity a, ViewPager p) {
 		super(((FragmentActivity)a).getSupportFragmentManager());
 		mContext = a;
-		mActionBar = ((SherlockFragmentActivity)a).getSupportActionBar(); //Will not need to cast as FragmentActivity when not relying on support packages
+		mActionBar = ((ActionBarActivity)a).getSupportActionBar(); //Will not need to cast as FragmentActivity when not relying on support packages
 		mViewPager = p;
 		mViewPager.setAdapter(this);
 		mViewPager.setOnPageChangeListener(this);
