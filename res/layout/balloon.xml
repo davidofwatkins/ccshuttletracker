@@ -16,7 +16,7 @@
 	
     <!-- The text of the bubble -->
     <LinearLayout
-        android:id="@id/balloon_inner_layout"
+        android:id="@+id/balloon_inner_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
