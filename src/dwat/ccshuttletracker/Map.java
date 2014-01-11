@@ -234,7 +234,6 @@ public class Map extends ActionBarActivity {
 					for (Bus bus : busses) {
 						for (Marker marker : allBusMarkers) {
 							if (bus.getName().equals(marker.getTitle())) {
-								//marker.setPosition(new LatLng(bus.getLatitude(), bus.getLongitude()));
 								marker.setSnippet(bus.generateSnippet());
 								marker.setVisible(bus.isActive());
 								animateMarker(marker, new LatLng(bus.getLatitude(), bus.getLongitude()));
@@ -278,12 +277,8 @@ public class Map extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.viewscheduleinfo_button:
-            	
-            	// TODO: Maybe encapsulate navigation to the schedules into its own method? (navigateToSchedules() or something)
-            	fullyResuming = false;
-            	Intent i = new Intent(this, Schedules.class);
-            	if (lastViewedScheduleId != -1) { i.putExtra("scheduleId", lastViewedScheduleId); }
-            	startActivity(i);
+
+            	navigateToSchedules();
                 break;
 
             case R.id.mapmode_button:
@@ -316,11 +311,7 @@ public class Map extends ActionBarActivity {
             	
 			case R.id.about_button:
             	
-            	fullyResuming = false;
-    			i = new Intent(this, HTMLDisplayer.class);
-    			i.putExtra("title", "About Shuttle Tracker");
-    			i.putExtra("url", "file:///android_asset/about-ccstracker.html");
-    			startActivity(i);
+				navigateToAbout();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -468,7 +459,8 @@ public class Map extends ActionBarActivity {
 	
 	/**
 	 * Calculates a bus icon based on the map's current zoom level.
-	 * @param zoomLevel The map's zoom level from which to calculate the appropriate icon size.
+	 * 
+	 * @param zoomLevel The map's zoom level from which to calculate the appropriate icon size
 	 * @return a bus icon
 	 */
 	private BitmapDescriptor getBusIcon(float zoomLevel) {
@@ -476,6 +468,15 @@ public class Map extends ActionBarActivity {
 		else if (zoomLevel < ZOOMLEVEL_SMALL_BUSES) return BitmapDescriptorFactory.fromResource(R.drawable.bus_small);
 		else return BitmapDescriptorFactory.fromResource(R.drawable.bus_med);
 	}
+	
+	/**
+	 * Calculates a bus stop icon based on the map's current zoom level
+	 * 
+	 * @param stopname The unique stop identifier (name) of the requested stop
+	 * @param zoomLevel The map's zoom level from which to calculate the appropriate icon size
+	 * @return a bus stop icon
+	 * @throws NullPointerException
+	 */
 	private BitmapDescriptor getStopIcon(String stopname, float zoomLevel) throws NullPointerException {
 		
 		Log.i("CCShuttleTracker", "Zoom level: " + zoomLevel);
@@ -503,6 +504,27 @@ public class Map extends ActionBarActivity {
 		else {
 			throw new NullPointerException("Cannot find stop " + stopname);
 		}
+	}
+	
+	/**
+	 * Opens the schedules page
+	 */
+	private void navigateToSchedules() {
+		fullyResuming = false;
+    	Intent i = new Intent(this, Schedules.class);
+    	if (lastViewedScheduleId != -1) { i.putExtra("scheduleId", lastViewedScheduleId); }
+    	startActivity(i);
+	}
+	
+	/**
+	 * Opens the about page
+	 */
+	private void navigateToAbout() {
+		fullyResuming = false;
+		Intent i = new Intent(this, HTMLDisplayer.class);
+		i.putExtra("title", "About Shuttle Tracker");
+		i.putExtra("url", "file:///android_asset/about-ccstracker.html");
+		startActivity(i);
 	}
 	
 	/**
