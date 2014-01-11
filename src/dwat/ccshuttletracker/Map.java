@@ -2,27 +2,45 @@ package dwat.ccshuttletracker;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.OverlayItem;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.Projection;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 /**
@@ -31,22 +49,23 @@ import com.google.android.maps.OverlayItem;
  * @author David Watkins
  * @version 2.1.1
  * @since 9/20/13
- *
  */
 public class Map extends ActionBarActivity {
 
 	private final int REFRESH_INTERVAL_IN_SEC = 5;
-	public static final int ZOOMLEVEL_MEDIUM_BUSSES = 17;
-	public static final int ZOOMLEVEL_MEDIUM_STOPS = 18;
+	public static final int ZOOMLEVEL_LARGE_BUSES = 16;
+	public static final double ZOOMLEVEL_SMALL_BUSES = 14.8;
+	public static final int ZOOMLEVEL_LARGE_STOPS = 16;
+	public static final double ZOOMLEVEL_SMALL_STOPS = 15.36;
 
-	private EnhancedMapView mapView;
+	private GoogleMap gmap;
 	private BusManager bm;
-	private OverlayManager overlayManager;
+	private Float previousZoomLevel;
+	private ArrayList<Marker> allBusMarkers;
 	public static ArrayList<Bus> busses;
 	private Timer timer;
-	private Drawable defaultDrawable;
 	private static Context context;
-	public final static SimpleDateFormat SDF = new SimpleDateFormat("MMM d, yyyy 'at' h:mm aaa");
+	public final static SimpleDateFormat SDF = new SimpleDateFormat("MMM d, yyyy 'at' h:mm aaa", Locale.US);
 	public static final Handler handler = new Handler();
 	private boolean fullyResuming;
 	private BroadcastReceiver receiver;
@@ -54,30 +73,108 @@ public class Map extends ActionBarActivity {
 	private static int lastViewedScheduleId = -1;
 	private ErrorReporter errorReporter;
 	private int activeBalloonBusId = -1;
-
+	
+	private final LatLng MAPCENTER = new LatLng(44.473948, -73.204125);
+	private final LatLng SPINNER = new LatLng(44.490467, -73.184191);
+	private LatLng CAMPUS = new LatLng(44.473680, -73.204125);
+	private LatLng GILBANE = new LatLng(44.460419, -73.216463);
+	private LatLng QUARRY = new LatLng(44.4666455, -73.1869866);
+	private final int DEFAULT_ZOOM = 13;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		setContentView(R.layout.map);
 		context = this;
 		
 		setTitle("Shuttle Tracker");
-		//actionBar.setHomeButtonEnabled(false);  //Should work with ICS actionBar (API 14+)
 		
 		errorReporter = new ErrorReporter(context);
-		mapView = (EnhancedMapView) findViewById(R.id.mapview);
+		gmap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+		gmap.setPadding(0, 100, 0, 0);
 
-		// Set the zoom level and center of map to either the default or the last view (used for orientation change)
+		// Set the zoom level and center of map
 		if (savedInstanceState == null || savedInstanceState.getBoolean("updated") == false) {
-			mapView.getController().setCenter(new GeoPoint((int) (44.473948151148015 * 1000000), (int) (-73.20428609848022 * 1000000)));
-			mapView.getController().setZoom(15);
+			gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(MAPCENTER, DEFAULT_ZOOM));
 		}
 		else {
-			mapView.getController().setCenter(new GeoPoint(savedInstanceState.getInt("lat"), savedInstanceState.getInt("lon")));
-			mapView.getController().setZoom(savedInstanceState.getInt("zoom"));
+			LatLng savedCoords = new LatLng(savedInstanceState.getDouble("lat"), savedInstanceState.getDouble("lon"));
+			gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(savedCoords, savedInstanceState.getInt("zoom")));
 		}
 		
 		bm = new BusManager(errorReporter);
+		allBusMarkers = new ArrayList<Marker>();
+		
+		//Update markers whenever the map has been zoomed
+		gmap.setOnCameraChangeListener(new OnCameraChangeListener() {
+			@Override
+			public void onCameraChange(CameraPosition position) {
+				if (previousZoomLevel != null && previousZoomLevel != position.zoom) {
+					updateMap(false, false);
+				}
+			}
+		});
+		
+		//Set up marker pop-up balloons
+		gmap.setInfoWindowAdapter(new InfoWindowAdapter() {
+			@Override
+			public View getInfoWindow(final Marker marker) {
+				View popup = getLayoutInflater().inflate(R.layout.balloon, null);
+				TextView title = (TextView) popup.findViewById(R.id.balloon_title);
+				title.setText(marker.getTitle());
+				TextView snippet = (TextView) popup.findViewById(R.id.balloon_snippet);
+				snippet.setText(marker.getSnippet());
+				
+				//Shave off the bottom padding from the bubble if there is no snippet
+				if (marker.getSnippet() == "" || marker.getSnippet() == null) {
+					LinearLayout bubble = (LinearLayout) popup.findViewById(R.id.balloon_main_layout);
+					bubble.setPadding(bubble.getPaddingLeft(), bubble.getPaddingTop(), bubble.getPaddingRight(), 0);
+				}
+								
+				/* Due to restrictions with the Maps API, elements inside balloons can't
+				be interacted with without some trickery. Would simply extend MarkerOptions,
+				but it's a final class. Probably not worth it for now.
+				
+				ImageView close = (ImageView) popup.findViewById(R.id.balloon_close);
+				close.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						marker.hideInfoWindow();
+					}
+				});*/
+	            return popup;
+			}
+
+			@Override
+			public View getInfoContents(Marker marker) {
+				return null;
+			}
+		});
+		
+		//Show more info when the balloon is tapped
+		gmap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+			@Override
+			public void onInfoWindowClick(Marker marker) {
+				if (marker.getSnippet() != "" && marker.getSnippet() != null) {
+					AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+					dialog.setTitle(marker.getTitle() + ": Details");
+					
+					for (Bus bus : busses) {
+						if (bus.getName().equals(marker.getTitle())) {
+							dialog.setMessage("Bus ID: " + bus.getId() +
+									"\nLatitude: " + bus.getLatitude() +
+									"\nLongitude: " + bus.getLongitude() +
+									"\nSpeed: " + bus.getMPH() + " MPH" +
+									"\nDirection: " + bus.getDirection() +
+									"\nLast Updated: " + Map.SDF.format(bus.getLastUpdated().getTime()));
+							dialog.setCancelable(true);
+							dialog.setPositiveButton("Ok", null);
+							dialog.show();
+						}
+					}
+				}
+			}
+		});
 		
 		//Start the ScreenOffListener (to detect when to not showErrorMessage())
 		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
@@ -119,65 +216,50 @@ public class Map extends ActionBarActivity {
 			});
 		}
 		
-		setDefaultDrawable();
-		
 		//(Re)initialize the busses array
 		busses = bm.updateBusses(reconnect); // Overwrite the busses array with a fresh set of busses
 		
-		//Clear all balloons
-		if (mapView.getOverlays().size() > 0 && mapView.getOverlays().get(0) instanceof OverlayManager) {
-			((OverlayManager) mapView.getOverlays().get(0)).hideAllBalloons(mapView.getOverlays());
-		}
-		else if (mapView.getOverlays().size() > 0)  {
-			Log.e("CCShuttleTracker", "ERROR: cannot retrieve OverlayManager from MapView! (See Map.java)");
-		}
-		
-		//Remove all overlays if there are any (recreate the overlay manager)
-		if (mapView.getOverlays().size() > 0) {
-			mapView.getOverlays().clear();
-		}
-		overlayManager = new OverlayManager(this, defaultDrawable, mapView);
-		
-		//Create Bus Overlays from busses
-		ArrayList<BusOverlay> busOverlays = createBusOverlays();
-		for (BusOverlay overlay : busOverlays) {
-			overlayManager.addOverlay(overlay);
-		}
-		
-		//Create Bus Stop Overlays
-		ArrayList<HashMap<String, Object>> stopOverlays = createStopOverlays();
-		for (HashMap<String, Object> overlayDetails : stopOverlays) {
-			overlayManager.addOverlay((OverlayItem)overlayDetails.get("overlay"), (Drawable)overlayDetails.get("icon"));
-		}
-		
-		//Submit the overlay manager to the map view
-		mapView.getOverlays().add(overlayManager);
-		
-		//Hide loading dialog if present
 		handler.post(new Runnable() {
+			@Override
 			public void run() {
+				
+				// If there are an equal number of buses to bus markers, just update the appropriate markers
+				if (busses.size() == allBusMarkers.size() && previousZoomLevel == gmap.getCameraPosition().zoom) {
+					
+					float zoomLevel = gmap.getCameraPosition().zoom;
+					
+					/**
+					 * TODO: the following will loop through everything twice. Stop that!
+					 */
+					for (Bus bus : busses) {
+						for (Marker marker : allBusMarkers) {
+							if (bus.getName().equals(marker.getTitle())) {
+								//marker.setPosition(new LatLng(bus.getLatitude(), bus.getLongitude()));
+								marker.setSnippet(bus.generateSnippet());
+								marker.setVisible(bus.isActive());
+								animateMarker(marker, new LatLng(bus.getLatitude(), bus.getLongitude()));
+							}
+						}
+					}
+					
+					previousZoomLevel = zoomLevel;
+				}
+				//If there are an unequal amount of buses to bus markers, clear the map and redraw everything
+				else {
+					gmap.clear();
+					allBusMarkers.clear();
+					
+					for (MarkerOptions marker : getStopMarkers()) {
+						gmap.addMarker(marker);
+					}
+					for (MarkerOptions marker : getBusMarkers(busses)) {
+						Marker newMarker = gmap.addMarker(marker);
+						allBusMarkers.add(newMarker);
+					}
+				}
 				if (loading != null) { loading.dismiss(); }
 			}
 		});
-		
-		mapView.postInvalidate();
-	}
-	
-	/**
-	 * Specifies which version of the bus icon to use based on 
-	 * how close the map is zoomed in.
-	 */
-	private void setDefaultDrawable() {
-		
-		if (mapView.getZoomLevel() > ZOOMLEVEL_MEDIUM_BUSSES) {
-			defaultDrawable = this.getResources().getDrawable(R.drawable.bus_large);
-		}
-		else if (mapView.getZoomLevel() < ZOOMLEVEL_MEDIUM_BUSSES) {
-			defaultDrawable = this.getResources().getDrawable(R.drawable.bus_small);
-		}
-		else {
-			defaultDrawable = this.getResources().getDrawable(R.drawable.bus_med);
-		}
 	}
 	
 	//@Override
@@ -197,6 +279,7 @@ public class Map extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.viewscheduleinfo_button:
             	
+            	// TODO: Maybe encapsulate navigation to the schedules into its own method? (navigateToSchedules() or something)
             	fullyResuming = false;
             	Intent i = new Intent(this, Schedules.class);
             	if (lastViewedScheduleId != -1) { i.putExtra("scheduleId", lastViewedScheduleId); }
@@ -205,17 +288,16 @@ public class Map extends ActionBarActivity {
 
             case R.id.mapmode_button:
             	
-            	if (mapView.isSatellite() == false) {
-            		mapView.setSatellite(true);
+            	if (gmap.getMapType() != GoogleMap.MAP_TYPE_HYBRID) {
+            		gmap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             	}
-            	else { mapView.setSatellite(false); }
+            	else { gmap.setMapType(GoogleMap.MAP_TYPE_NORMAL); }
                 break;
               
             case R.id.refresh_button:
             	
             	new Thread(new Runnable() {
 					public void run() {
-						
 						try {
 							updateMap(true, true);
 						}
@@ -229,8 +311,7 @@ public class Map extends ActionBarActivity {
             	
             case R.id.center_button:
             	
-            	mapView.getController().animateTo(new GeoPoint((int) (44.473948151148015 * 1000000), (int) (-73.20428609848022 * 1000000)));
-            	mapView.getController().setZoom(15);
+            	gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(MAPCENTER, DEFAULT_ZOOM));
             	break;
             	
 			case R.id.about_button:
@@ -248,9 +329,9 @@ public class Map extends ActionBarActivity {
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putBoolean("updated", true);
-		savedInstanceState.putInt("zoom", mapView.getZoomLevel());
-		savedInstanceState.putInt("lat", mapView.getMapCenter().getLatitudeE6());
-		savedInstanceState.putInt("lon", mapView.getMapCenter().getLongitudeE6());
+		savedInstanceState.putInt("zoom", (int) gmap.getCameraPosition().zoom);
+		savedInstanceState.putDouble("lat", gmap.getCameraPosition().target.latitude);
+		savedInstanceState.putDouble("lon", gmap.getCameraPosition().target.longitude);
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
@@ -277,7 +358,10 @@ public class Map extends ActionBarActivity {
 					updateMap(true, false);
 					Log.i("CCShuttleTracker", "Successfully refreshing overlays");
 				}
-				catch(Exception e) { Log.e("CCShuttleTracker", "Could not refresh overlay: " + e); }
+				catch(Exception e) {
+					Log.e("CCShuttleTracker", "Could not refresh overlay: " + e);
+					e.printStackTrace();
+				}
 			}
 		}, 0, REFRESH_INTERVAL_IN_SEC * 1000);
 	}
@@ -321,101 +405,136 @@ public class Map extends ActionBarActivity {
 		return handler;
 	}
 	
-	private ArrayList<BusOverlay> createBusOverlays() {
+	/**
+	 * Generates a set of MarkerOptions for a set of given Buses to be used
+	 * on the map.
+	 * 
+	 * @param buses An ArrayList of Bus's from which to create the markers
+	 * @return an ArrayList of MarkerOptions containing a summary of information for the appropriate bus
+	 */
+	private ArrayList<MarkerOptions> getBusMarkers(ArrayList<Bus> buses) {
 		
-		ArrayList<BusOverlay> overlays = new ArrayList<BusOverlay>();
+		ArrayList<MarkerOptions> markers = new ArrayList<MarkerOptions>();
+		float zoomLevel = gmap.getCameraPosition().zoom;
 		
-		try {
-			for (Bus bus : busses) {
-				int busCounter = 0;
-				if (bus.isActive()) {
-					
-					GeoPoint point = new GeoPoint((int) (bus.getLatitude() * 1000000), (int) (bus.getLongitude() * 1000000));
-					
-					String snippet;
-					if (bus.getKnots() != 0) { snippet = "Moving " + bus.getDirection() + " at " + bus.getMPH() + " MPH"; }
-					else { snippet = bus.getMPH() + " MPH"; }
-					
-					BusOverlay overlay = new BusOverlay(busCounter, bus, point, snippet);
-					//overlayManager.addOverlay(overlay, activeBalloonBusId);
-					overlays.add(overlay);
-				}
-				busCounter++;
-			}
-		}
-		catch(NullPointerException e) {
-			Log.e("CCShuttleTracker", "Unknown error showing busses.");
+		for (Bus bus : buses) {
+			markers.add(new MarkerOptions()
+				.position(new LatLng(bus.getLatitude(), bus.getLongitude()))
+		        .title(bus.getName())
+		        .snippet(bus.generateSnippet())
+		        .icon(getBusIcon(zoomLevel))
+		        .visible(bus.isActive())
+			);
 		}
 		
-		return overlays;
+		previousZoomLevel = zoomLevel;
+		return markers;
 	}
 	
-	private ArrayList<HashMap<String, Object>> createStopOverlays() {
-		// Create busStop overlays
-		HashMap<Double, Double> busStops = new HashMap<Double, Double>(5);
-		busStops.put(44.490467, -73.184191); // Spinner
-		busStops.put(44.473680, -73.204125); // Campus
-		//busStops.put(44.473458, -73.219746); // Perkins
-		busStops.put(44.460419, -73.216463); // Gilbane
-		busStops.put(44.4666455, -73.1869866); // Quarry
+	/**
+	 * Calculates the appropriate icon for each bus stop and generates a list
+	 * of markers.
+	 * 
+	 * @return an ArrayList of MarkerOptions for each bus stop
+	 */
+	private ArrayList<MarkerOptions> getStopMarkers() {
 		
-		ArrayList<HashMap<String, Object>> overlays = new ArrayList<HashMap<String, Object>>();
+		ArrayList<MarkerOptions> markers = new ArrayList<MarkerOptions>();
+		float zoomLevel = gmap.getCameraPosition().zoom;
 		
-		for (HashMap.Entry<Double, Double> stop : busStops.entrySet()) {
-			
-			GeoPoint stopPoint = new GeoPoint((int) (stop.getKey() * 1000000), (int) (stop.getValue() * 1000000));
-			OverlayItem overlay = null;
-
-			Drawable stopIcon = null;
-			
-			//Spinner
-			if (stop.getKey() == 44.490467 && stop.getValue() == -73.184191) {
-				
-				overlay = new OverlayItem(stopPoint, "Spinner Place", "");
-				
-				if (mapView.getZoomLevel() > ZOOMLEVEL_MEDIUM_STOPS) { stopIcon = this.getResources().getDrawable(R.drawable.spinner_stop_large); } //stopicon_big, > 16
-				else if (mapView.getZoomLevel() < ZOOMLEVEL_MEDIUM_STOPS) { stopIcon = this.getResources().getDrawable(R.drawable.spinner_stop_small); } //stopicon_small, < 16
-				else { stopIcon = this.getResources().getDrawable(R.drawable.spinner_stop_med); } //stopicon_med	
-			}
-			
-			//Campus
-			else if (stop.getKey() == 44.473680 && stop.getValue() == -73.204125) {
-				
-				overlay = new OverlayItem(stopPoint, "Campus", "");
-				
-				if (mapView.getZoomLevel() > ZOOMLEVEL_MEDIUM_STOPS) { stopIcon = this.getResources().getDrawable(R.drawable.campus_stop_large); } //stopicon_big, > 16
-				else if (mapView.getZoomLevel() < ZOOMLEVEL_MEDIUM_STOPS) { stopIcon = this.getResources().getDrawable(R.drawable.campus_stop_small); } //stopicon_small, < 16
-				else { stopIcon = this.getResources().getDrawable(R.drawable.campus_stop_med); } //stopicon_med
-			}
-			
-			//Gilbane
-			else if (stop.getKey() == 44.460419 && stop.getValue() == -73.216463) {
-				
-				overlay = new OverlayItem(stopPoint, "Gilbane Lot & Lakeside Campus", "");
-				
-				if (mapView.getZoomLevel() > ZOOMLEVEL_MEDIUM_STOPS) { stopIcon = this.getResources().getDrawable(R.drawable.gilbane_stop_large); } //stopicon_big, > 16
-				else if (mapView.getZoomLevel() < ZOOMLEVEL_MEDIUM_STOPS) { stopIcon = this.getResources().getDrawable(R.drawable.gilbane_stop_small); } //stopicon_small, < 16
-				else { stopIcon = this.getResources().getDrawable(R.drawable.gilbane_stop_med); } //stopicon_med
-			}
-			
-			//Quarry
-			else if (stop.getKey() == 44.4666455 && stop.getValue() == -73.1869866) {
-				
-				overlay = new OverlayItem(stopPoint, "Quarry Hill", "");
-				
-				if (mapView.getZoomLevel() > ZOOMLEVEL_MEDIUM_STOPS) { stopIcon = this.getResources().getDrawable(R.drawable.quarry_stop_large); } //stopicon_big, > 16
-				else if (mapView.getZoomLevel() < ZOOMLEVEL_MEDIUM_STOPS) { stopIcon = this.getResources().getDrawable(R.drawable.quarry_stop_small); } //stopicon_small, < 16
-				else { stopIcon = this.getResources().getDrawable(R.drawable.quarry_stop_med); } //stopicon_med
-			}
-			
-			stopIcon.setBounds(0, 0, stopIcon.getIntrinsicWidth(), stopIcon.getIntrinsicHeight());
-			
-			HashMap<String, Object> overlayDetails = new HashMap<String, Object>();
-			overlayDetails.put("overlay", overlay);
-			overlayDetails.put("icon", stopIcon);
-			overlays.add(overlayDetails);
-		}
+		markers.add(new MarkerOptions()
+			.position(CAMPUS)
+	        .title("Champlain College")
+	        .icon(getStopIcon("campus", zoomLevel))
+		);
+		markers.add(new MarkerOptions()
+			.position(SPINNER)
+	        .title("Spinner Place")
+	        .icon(getStopIcon("spinner", zoomLevel))
+		);
+		markers.add(new MarkerOptions()
+			.position(GILBANE)
+	        .title("Gilbane Lot & Lakeside Campus")
+	        .icon(getStopIcon("gilbane", zoomLevel))
+		);
+		markers.add(new MarkerOptions()
+			.position(QUARRY)
+	        .title("Quarry Hill")
+	        .icon(getStopIcon("quarry", zoomLevel))
+		);
 		
-		return overlays;
+		return markers;
 	}
+	
+	/**
+	 * Calculates a bus icon based on the map's current zoom level.
+	 * @param zoomLevel The map's zoom level from which to calculate the appropriate icon size.
+	 * @return a bus icon
+	 */
+	private BitmapDescriptor getBusIcon(float zoomLevel) {
+		if (zoomLevel > ZOOMLEVEL_LARGE_BUSES) return BitmapDescriptorFactory.fromResource(R.drawable.bus_large);
+		else if (zoomLevel < ZOOMLEVEL_SMALL_BUSES) return BitmapDescriptorFactory.fromResource(R.drawable.bus_small);
+		else return BitmapDescriptorFactory.fromResource(R.drawable.bus_med);
+	}
+	private BitmapDescriptor getStopIcon(String stopname, float zoomLevel) throws NullPointerException {
+		
+		Log.i("CCShuttleTracker", "Zoom level: " + zoomLevel);
+		
+		if (stopname.equals("campus")) {
+			if (zoomLevel > ZOOMLEVEL_LARGE_STOPS) return BitmapDescriptorFactory.fromResource(R.drawable.campus_stop_large);
+			else if (zoomLevel < ZOOMLEVEL_SMALL_STOPS) return BitmapDescriptorFactory.fromResource(R.drawable.campus_stop_small);
+			else return BitmapDescriptorFactory.fromResource(R.drawable.campus_stop_med);
+		}
+		else if (stopname.equals("spinner")) {
+			if (zoomLevel > ZOOMLEVEL_LARGE_STOPS) return BitmapDescriptorFactory.fromResource(R.drawable.spinner_stop_large);
+			else if (zoomLevel < ZOOMLEVEL_SMALL_STOPS) return BitmapDescriptorFactory.fromResource(R.drawable.spinner_stop_small);
+			else return BitmapDescriptorFactory.fromResource(R.drawable.spinner_stop_med);
+		}
+		else if (stopname.equals("gilbane")) {
+			if (zoomLevel > ZOOMLEVEL_LARGE_STOPS) return BitmapDescriptorFactory.fromResource(R.drawable.gilbane_stop_large);
+			else if (zoomLevel < ZOOMLEVEL_SMALL_STOPS) return BitmapDescriptorFactory.fromResource(R.drawable.gilbane_stop_small);
+			else return BitmapDescriptorFactory.fromResource(R.drawable.gilbane_stop_med);
+		}
+		else if (stopname.equals("quarry")) {
+			if (zoomLevel > ZOOMLEVEL_LARGE_STOPS) return BitmapDescriptorFactory.fromResource(R.drawable.quarry_stop_large);
+			else if (zoomLevel < ZOOMLEVEL_SMALL_STOPS) return BitmapDescriptorFactory.fromResource(R.drawable.quarry_stop_small);
+			else return BitmapDescriptorFactory.fromResource(R.drawable.quarry_stop_med);
+		}
+		else {
+			throw new NullPointerException("Cannot find stop " + stopname);
+		}
+	}
+	
+	/**
+     * Moves a marker to another point on the map (stolen from: http://stackoverflow.com/a/15941069/477632)
+     *
+     * @param marker the marker to move
+     * @param toPosition the new position for the marker to move to
+     */
+    private void animateMarker(final Marker marker, final LatLng toPosition) {
+    	final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+        Projection proj = gmap.getProjection();
+        Point startPoint = proj.toScreenLocation(marker.getPosition());
+        final LatLng startLatLng = proj.fromScreenLocation(startPoint);
+        final long duration = 500;
+        final Interpolator interpolator = new LinearInterpolator();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                long elapsed = SystemClock.uptimeMillis() - start;
+                float t = interpolator.getInterpolation((float) elapsed / duration);
+                double lng = t * toPosition.longitude + (1 - t) * startLatLng.longitude;
+                double lat = t * toPosition.latitude + (1 - t) * startLatLng.latitude;
+                marker.setPosition(new LatLng(lat, lng));
+                if (t < 1.0) {
+                    // Post again 16ms later.
+                    handler.postDelayed(this, 16);
+                }
+                //else {
+                    //marker.setVisible(true); //not sure if necessary
+                //}
+            }
+        });
+    }
 }

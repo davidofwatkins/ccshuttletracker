@@ -48,7 +48,7 @@ public class BusManager {
 		
 		ArrayList<Bus> buses = null;
 		int i = 1;
-		while (i <= 3) { //try this three times in case it doesn't work at first
+		while (i <= 3) { //try this at least 3x before giving up in case of network problems
 			try {
 				if (reconnect) { buses = generateBuses(unparsedString); }
 				else { buses = generateBuses(cachedUnparsedString); }
@@ -66,6 +66,7 @@ public class BusManager {
 				Log.e("CCShuttleTracker", "Unknown error (Null pointer)");
 				if (i == 3) return buses; //return empty busses array to avoid crash
 			}
+			i++;
 		}
 		
 		if (buses.size() == 0)
@@ -83,28 +84,21 @@ public class BusManager {
 	private String getRawData() {
 		
 		if (reconnect == true) {
-			
 			try {
-				
 				URL url = new URL("http://shuttle.champlain.edu/shuttledata");
 				BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 				
 				String returnString = in.readLine();
 				cachedUnparsedString = returnString;
-				
 				reporter.resetConnectionMessages();
-				
 				return returnString;
 			}
 			catch (IOException e) {
-				
 				//need to set cached string to none too, so that the map
 				//doesn't show old bus locations when it has no connection
-				cachedUnparsedString = ""; 
+				cachedUnparsedString = "";
 				
-				// Make error message that says it can't reach shuttle.champlain.edu
 				reporter.reportNoConnection();
-				
 				return "";
 			}
 			catch(Exception e) {
@@ -136,7 +130,6 @@ public class BusManager {
 	private ArrayList<Bus> generateBuses(String jsonString) throws JSONException, ParseException, NullPointerException {
 		
 		ArrayList<Bus> newBuses = new ArrayList<Bus>();
-		
 		JSONArray busesData = new JSONArray(jsonString);
 		
 		for (int i = 0; i < busesData.length(); i++) {
@@ -163,6 +156,15 @@ public class BusManager {
 			else if (directionInt >= 292 && directionInt < 337) { direction = "NW"; }
 			else { direction = "N/A"; }
 			
+			//Check for duplicate names
+			String busName = busData.getString("Unit_Name");
+			for (Bus bus : newBuses) {
+				if (bus.getName().equalsIgnoreCase(busName)) {
+					busName = busName + " 2";
+					break;
+				}
+			}
+			
 			Bus newBus = new Bus(
 					busData.getInt("UnitID"),
 					busData.getString("Unit_Name"),
@@ -177,7 +179,6 @@ public class BusManager {
 			
 			newBuses.add(newBus);
 		}
-		
 		return newBuses;
 	}
 }

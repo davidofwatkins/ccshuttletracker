@@ -22,6 +22,17 @@ For more information for importing the v7 AppCompat library, [see here](http://w
 
 Also: ensure that the project and project libraries are set to the proper build targets. The main project should be set to 16 (Google APIs) at least, and android-mapviewballoons must be set to a Google APIs target (such as 18). ActionBarSherlock must be set to API 14 at minimum. The simplest solution is to ensure all three projects are set to the same build target.
 
+### Using Google API Key
+
+CC Shuttle Tracker uses the [Google Maps API v2](https://developers.google.com/maps/documentation/android/), which requires an API key to work. To add your API key, create an XML file in `res/values/` such as `apikeys.xml`. In this file, enter the following:
+
+	<?xml version="1.0" encoding="utf-8"?>
+	<resources>
+	    <string name="googlemaps_key">MY_KEY_HERE</string>
+	</resources>
+
+This variable will be used in the Android Manifest with `@string/googlemaps_key`. To protect your API key, `.gitignore` is set to ignore this file.
+
 ## Changelog
 
 ### v2.1.1

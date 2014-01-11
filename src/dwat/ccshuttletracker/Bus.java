@@ -58,7 +58,6 @@ public class Bus {
 	public String getUnitOperator() {
 		return unitOperator;
 	}
-	
 	public double getLatitude() {
 		return latitude;
 	}
@@ -93,12 +92,20 @@ public class Bus {
 		if (latitude < 44.50238238974582 && longitude < -73.16662788391113 && latitude > 44.446648964675376 && longitude > -73.23537826538086) {
 			
 			//And if it's a recent bus
-			if (Calendar.getInstance().getTimeInMillis() - lastUpdated.getTimeInMillis() < 1200000) //20 minutes
+			if (Calendar.getInstance().getTimeInMillis() - lastUpdated.getTimeInMillis() < 1200000) { //20 minutes
 				return true;
-			else
+			} else {
 				return false;
+			}
 		}
 		else { return false; }
+	}
+	
+	public String generateSnippet() {
+		String snippet;
+		if (this.getKnots() != 0) { snippet = "Moving " + this.getDirection() + " at " + this.getMPH() + " MPH"; }
+		else { snippet = this.getMPH() + " MPH"; }
+		return snippet;
 	}
 	
 	/**
