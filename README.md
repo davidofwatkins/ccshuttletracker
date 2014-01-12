@@ -5,26 +5,31 @@
 ###Summary:
 The Champlain College Shuttle Tracker displays locations of shuttles and buses at Champlain College that are responsible for transportation between campus, Spinner Place, Quarry Hill, and the Gilbane/Lakeside parking lots. It is an unofficial, mobile, and on-the-go alternative to the desktop web tracker, available at [shuttle.champlain.edu](http://shuttle.champlain.edu).
 
-Available on the Play Store: <https://play.google.com/store/apps/details?id=dwat.ccshuttletracker>
+Available on the Play Store, [here](https://play.google.com/store/apps/details?id=dwat.ccshuttletracker):
 
-## Project Setup in Eclipse
+[![CC Shuttle Tracker](https://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=dwat.ccshuttletracker)
 
-After importing the project into Eclipse, it is necessary to link project dependencies (Support v7 AppCompat and android-mapviewballoons). To do this, you must import them as projects into the Eclipse workspace, as follows:
+## Project Dependencies
 
-1. Go to File > Import and then Android > Android Project from Existing Code. Click Next.
-1. Next to Root Directory, choose "Browse" and navigate to the dependency folder. The AppCompat library is located in the Android SDK at <sdk>/extras/android/compatibility/appcompat, and the MapView Balloons extension is included in this project at <project>/libs/android-mapviewballoons.
-1. Right click the CC Shuttle Tracker project and choose properties > Android.
-1. Click "Add" under the Library section.
-1. Choose the freshly-created dependency project from the list.
-1. Click ok.
+CC Shuttle Tracker requires the following dependencies:
 
-For more information for importing the v7 AppCompat library, [see here](http://www.begincodingnow.com/tutorial/adding-action-bar-support-library-to-apps-running-on-android-2-1/).
+* [Android Support v4](http://developer.android.com/tools/support-library/features.html#v4)
+* [Android Support v7 AppCompat](http://developer.android.com/tools/support-library/features.html#v7-appcompat)
+* [Google Play Services](https://developer.android.com/google/play-services/index.html?hl=en)
 
-Also: ensure that the project and project libraries are set to the proper build targets. The main project should be set to 16 (Google APIs) at least, and android-mapviewballoons must be set to a Google APIs target (such as 18). ActionBarSherlock must be set to API 14 at minimum. The simplest solution is to ensure all three projects are set to the same build target.
+If you are using [Android Studio](http://developer.android.com/sdk/installing/studio.html), include the following in your `build.gradle` file and click _Sync Project with Gradle Files_ in the toolbar:
 
-### Using Google API Key
+	dependencies {
+		compile 'com.android.support:support-v4:18.0.+'
+	    compile 'com.android.support:appcompat-v7:18.0.+'
+	    compile 'com.google.android.gms:play-services:4.0.30'
+	}
 
-CC Shuttle Tracker uses the [Google Maps API v2](https://developers.google.com/maps/documentation/android/), which requires an API key to work. To add your API key, create an XML file in `res/values/` such as `apikeys.xml`. In this file, enter the following:
+**Note:** these version numbers should be updated when new versions are released.
+
+### Google API Key
+
+CC Shuttle Tracker uses the [Google Maps API v2](https://developers.google.com/maps/documentation/android/), which requires an API key to work. To add your API key, create an XML file in `res/values/` such as `apikeys.xml`. Include the API key in this file as such:
 
 	<?xml version="1.0" encoding="utf-8"?>
 	<resources>

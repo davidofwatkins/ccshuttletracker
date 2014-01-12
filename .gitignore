@@ -1,6 +1,7 @@
 # built application files
 *.apk
 *.ap_
+libs/
 
 # files for the dex VM
 *.dex
@@ -19,6 +20,7 @@ local.properties
 # Eclipse project files
 .classpath
 .project
+proguard/
 
 # Android Studio
 .idea/
