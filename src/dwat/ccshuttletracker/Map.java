@@ -228,15 +228,13 @@ public class Map extends ActionBarActivity {
 					
 					float zoomLevel = gmap.getCameraPosition().zoom;
 					
-					/**
-					 * TODO: the following will loop through everything twice. Stop that!
-					 */
 					for (Bus bus : busses) {
 						for (Marker marker : allBusMarkers) {
 							if (bus.getName().equals(marker.getTitle())) {
 								marker.setSnippet(bus.generateSnippet());
 								marker.setVisible(bus.isActive());
 								animateMarker(marker, new LatLng(bus.getLatitude(), bus.getLongitude()));
+								break;
 							}
 						}
 					}
