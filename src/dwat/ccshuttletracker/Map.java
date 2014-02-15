@@ -551,9 +551,6 @@ public class Map extends ActionBarActivity {
                     // Post again 16ms later.
                     handler.postDelayed(this, 16);
                 }
-                //else {
-                    //marker.setVisible(true); //not sure if necessary
-                //}
             }
         });
     }

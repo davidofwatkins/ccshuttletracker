@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ccshuttletracker="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/viewschedulesonline_button"
           android:icon="@drawable/view_online"
           android:title="View Online"
-          android:showAsAction="ifRoom" />
+          ccshuttletracker:showAsAction="ifRoom" />
 </menu>
