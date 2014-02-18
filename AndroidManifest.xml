@@ -40,9 +40,8 @@
         <activity android:name=".Schedules"
             android:theme="@style/ShuttleScheduleTheme" />
         
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="@string/googlemaps_key" />
+		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="@string/googlemaps_key" />
+		<meta-data android:name="com.crashlytics.ApiKey" android:value="@string/crashlytics_key"/>
         
     </application>
     

@@ -16,6 +16,7 @@ CC Shuttle Tracker requires the following dependencies:
 * [Android Support v4](http://developer.android.com/tools/support-library/features.html#v4)
 * [Android Support v7 AppCompat](http://developer.android.com/tools/support-library/features.html#v7-appcompat)
 * [Google Play Services](https://developer.android.com/google/play-services/index.html?hl=en)
+* [Crashlytics](https://www.crashlytics.com/)
 
 If you are using [Android Studio](http://developer.android.com/sdk/installing/studio.html), include the following in your `build.gradle` file and click _Sync Project with Gradle Files_ in the toolbar:
 
@@ -27,16 +28,21 @@ If you are using [Android Studio](http://developer.android.com/sdk/installing/st
 
 **Note:** these version numbers should be updated when new versions are released.
 
-### Google API Key
+Please also install and configure the [Crashlytics plugin for your IDE of choice](https://www.crashlytics.com/onboard).
 
-CC Shuttle Tracker uses the [Google Maps API v2](https://developers.google.com/maps/documentation/android/), which requires an API key to work. To add your API key, create an XML file in `res/values/` such as `apikeys.xml`. Include the API key in this file as such:
+### API Keys
+
+CC Shuttle Tracker relies on the [Google Maps API v2](https://developers.google.com/maps/documentation/android/) and [Crashlytics](https://www.crashlytics.com/), both of which require an API key. To add your API keys, define them in `res/values/apikeys.xml` as such:
 
 	<?xml version="1.0" encoding="utf-8"?>
 	<resources>
 	    <string name="googlemaps_key">MY_KEY_HERE</string>
+	    <string name="crashlytics_key">MY_KEY_HERE</string>
+	    <!-- Set debug to true to turn off Crashlytics: -->
+    	<bool name="debug">false</bool>
 	</resources>
 
-This variable will be used in the Android Manifest with `@string/googlemaps_key`. To protect your API key, `.gitignore` is set to ignore this file.
+If `debug` is true, Crashlytics will be deactivated. To protect your keys, `.gitignore` is set to ignore this file.
 
 ## Changelog
 

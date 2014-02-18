@@ -1,5 +1,6 @@
 package dwat.ccshuttletracker;
 
+import com.crashlytics.android.Crashlytics;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -84,10 +85,16 @@ public class Map extends ActionBarActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Boolean debugging = getResources().getBoolean(R.bool.debug);
+		if (!debugging) { Crashlytics.start(this); }
 		setContentView(R.layout.map);
 		context = this;
-		
 		setTitle("Shuttle Tracker");
+		
+		if (debugging) {
+			Log.w("CCShuttleTracker", "Debugging. Crashlytics will not report.");
+			Toast.makeText(context, "Debugging", Toast.LENGTH_SHORT).show();
+		}
 		
 		errorReporter = new ErrorReporter(context);
 		gmap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
