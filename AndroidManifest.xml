@@ -42,6 +42,7 @@
         
 		<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="@string/googlemaps_key" />
 		<meta-data android:name="com.crashlytics.ApiKey" android:value="@string/crashlytics_key"/>
+		<meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
         
     </application>
     
