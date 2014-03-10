@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CC Shuttle Tracker</string>
+    <string name="app_name">Champlain Tracker</string>
 <string name="menu_viewschedules">View Schedule Information</string>
 <string-array name="schedules_array">
     <item>Spinner Place</item>

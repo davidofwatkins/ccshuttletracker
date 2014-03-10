@@ -89,7 +89,6 @@ public class Map extends ActionBarActivity {
 		if (!debugging) { Crashlytics.start(this); }
 		setContentView(R.layout.map);
 		context = this;
-		setTitle("Shuttle Tracker");
 		
 		if (debugging) {
 			Log.w("CCShuttleTracker", "Debugging. Crashlytics will not report.");
