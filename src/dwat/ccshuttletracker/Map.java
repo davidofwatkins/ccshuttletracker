@@ -107,6 +107,7 @@ public class Map extends ActionBarActivity {
 			LatLng savedCoords = new LatLng(savedInstanceState.getDouble("lat"), savedInstanceState.getDouble("lon"));
 			gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(savedCoords, savedInstanceState.getInt("zoom")));
 		}
+		if (previousZoomLevel == null) { previousZoomLevel = gmap.getCameraPosition().zoom; }
 		
 		bm = new BusManager(errorReporter);
 		allBusMarkers = new ArrayList<Marker>();
@@ -482,8 +483,6 @@ public class Map extends ActionBarActivity {
 	 * @throws NullPointerException
 	 */
 	private BitmapDescriptor getStopIcon(String stopname, float zoomLevel) throws NullPointerException {
-		
-		Log.i("CCShuttleTracker", "Zoom level: " + zoomLevel);
 		
 		if (stopname.equals("campus")) {
 			if (zoomLevel > ZOOMLEVEL_LARGE_STOPS) return BitmapDescriptorFactory.fromResource(R.drawable.campus_stop_large);
