@@ -56,9 +56,11 @@ If `debug` is true, Crashlytics will be deactivated. To protect your keys, `.git
 
 ### v2.2
 
-- Updated Google Maps to v2
+- Added Crashlytics crash reporting
+- Updated the Google Maps API to v2
 - Replaced Action Bar Sherlock with AppCompat v7
-
+- Other minor performance improvements and code refactoring
+- Removed unnecessary libraries
 
 ### v2.1.1
 
