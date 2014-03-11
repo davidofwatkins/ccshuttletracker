@@ -140,15 +140,8 @@ public class Map extends ActionBarActivity {
 								
 				/* Due to restrictions with the Maps API, elements inside balloons can't
 				be interacted with without some trickery. Would simply extend MarkerOptions,
-				but it's a final class. Probably not worth it for now.
+				but it's a final class. Probably not worth it for now. */
 				
-				ImageView close = (ImageView) popup.findViewById(R.id.balloon_close);
-				close.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						marker.hideInfoWindow();
-					}
-				});*/
 	            return popup;
 			}
 
