@@ -1,4 +1,4 @@
-# Champlain College Shuttle Tracker for Android
+# Champlain College Shuttle Tracker <sup>for Android</sup>
 
 **Created and Maintained by:** [David Watkins](http://davidofwatkins.com/) ([@dwat91](https://twitter.com/dwat91), [+David Watkins](https://plus.google.com/104494880066441442910))
 
