@@ -21,13 +21,13 @@ CC Shuttle Tracker requires the following dependencies:
 
 ## Getting Started with Eclipse
 
-Shuttle Tracker runs most easily on [Eclipse](https://www.eclipse.org/) with ADT (Android Development Tools). For more information about installing the Android SDK, please [see here](https://developer.android.com/sdk/installing/index.html). Once the SDK is installed and updated, follow these steps to set up your project:
+Champlain Tracker runs most easily on [Eclipse](https://www.eclipse.org/) with ADT (Android Development Tools). For more information about installing the Android SDK, please [see here](https://developer.android.com/sdk/installing/index.html). Once the SDK and ADT are installed and updated, follow these steps to set up your project:
 
 1. Ensure that [Android Support v4](http://developer.android.com/tools/support-library/features.html#v4), [Android Support v7 AppCompat](http://developer.android.com/tools/support-library/features.html#v7-appcompat), and [Google Play Services](https://developer.android.com/google/play-services/index.html?hl=en) are each installed in the [Android SDK Manager](http://developer.android.com/tools/help/sdk-manager.html).
-1. Clone the Shuttle Tracker somewhere outside of your Eclipse Workspace.
-1. Import the Shuttle Tracker project as well as the Android dependencies into your Eclipse Workspace:
+1. Clone the Champlain Tracker repo somewhere outside of your Eclipse Workspace.
+1. Import the Champlain Tracker project as well as the Android dependencies into your Eclipse Workspace:
 	1. In Eclipse, click File > Import > Android > Existing Code into Workspace
-	1. Select the Shuttle Tracker project directory
+	1. Select the Champlain Tracker project directory
 	1. Select the AppCompat v7 library folder from the Android SDK: `<android-sdk>\extras\android\compatibility<or support>\v7\appcompat`
 	1. Select the Play Services library folder from the Android SDK: `<android-sdk>/extras/google/google_play_services/libproject/google-play-services_lib/` (for more information, [see here](http://developer.android.com/google/play-services/setup.html).)
 	1. **Important:** be sure to check "Copy projects into workspace"
@@ -36,7 +36,7 @@ Shuttle Tracker runs most easily on [Eclipse](https://www.eclipse.org/) with ADT
 1. Right-click the project and choose "Properties." Click "Android" from the left-hand menu, and ensure the proper build target is selected (usually the latest version with Google APIs).
 1. In the same menu, ensure that both the Google Play Services and AppCompat v7 libraries are selected under "Library." If not, click "Add" and select them.
 1. Create your `apikeys.xml` file and place it in `/res/values/` (see below).
-1. If you plan to use Crashlytics, you can install and configure it as an Eclipse plugin from [here](https://www.crashlytics.com/onboard). If not, simply remove the Crashlytics `import` statement and `if (!debugging) { Crashlytics.start(this); }` line from `Map.java`.
+1. If you plan to use Crashlytics, you can install and configure it as an Eclipse plugin from [here](https://www.crashlytics.com/onboard). If not, simply remove the Crashlytics `import` statement and the `if (!debugging) { Crashlytics.start(this); }` line from `Map.java`.
 
 ### API Keys
 
@@ -52,6 +52,18 @@ CC Shuttle Tracker uses the [Google Maps API v2](https://developers.google.com/m
 
 If `debug` is true, Crashlytics will be deactivated. To protect your keys, `.gitignore` is set to ignore this file.
 
+## To-Do List
+
+If you're a part of the Champlain community and would like to contribute to the app, please feel free to fork and pull request. If you'd like a few ideas, here are some features that could improve the app:
+
+- **Smarter Icons**: [shuttle.champlain.edu/shuttledata](http://shuttle.champlain.edu/shuttledata) already provides the direction buses are facing, so it might be nice to visually reflect that on the app. This might involve replacing the existing icons with some sort of "bird's-eye view" icons.
+- **Homescreen Widget**: the Champlain Tracker has a pretty straightforward purpose, and users shouldn't have to open the app just for a quick glance at shuttles' locations. A simple map (and/or schedule) widget for the Android homescreen would provide a more direct experience for frequent shuttlers.
+- **Cloud-Powered Schedules**: currently, the in-app schedules are static HTML pages. To reduce maintenance, it would be nice to have an API that the app could use to download new schedule information from a server. (This may require more coordination with the college, but they might benefit from a more streamlined way to publish schedule data [to their site](http://www.champlain.edu/current-students/campus-services/transportation-and-parking/transportation-services-and-shuttle/shuttle), too.)
+- **Time Estimations**: at the end of the day, shuttle passengers don't care as much about where shuttles are than they do about when they will arrive. Champlain Tracker needs a page with a list of shuttles and their aproximate times from each stop.
+- **Notifications**: perhaps in combination with the above feature, users could request notifications for when specific buses enter proximity of specific stops. This could be calculated by time, or the app could continually check on bus locations when a notification is requested.
+
+If you plan to contribute, it may be best to discuss your plans in the "issues" tab so there's a record of what features are being worked on.
+
 ## Changelog
 
 ### v2.2
@@ -59,6 +71,7 @@ If `debug` is true, Crashlytics will be deactivated. To protect your keys, `.git
 - Added Crashlytics crash reporting
 - Updated the Google Maps API to v2
 - Replaced Action Bar Sherlock with AppCompat v7
+- Renamed app to "Champlain Tracker"
 - Other minor performance improvements and code refactoring
 - Removed unnecessary libraries
 
