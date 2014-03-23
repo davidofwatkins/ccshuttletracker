@@ -530,7 +530,7 @@ public class Map extends ActionBarActivity {
      * @param toPosition the new position for the marker to move to
      */
     private void animateMarker(final Marker marker, final LatLng toPosition) {
-    	final Handler handler = new Handler();
+//    	final Handler handler = new Handler();
         final long start = SystemClock.uptimeMillis();
         Projection proj = gmap.getProjection();
         Point startPoint = proj.toScreenLocation(marker.getPosition());
