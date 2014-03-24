@@ -224,7 +224,7 @@ public class Map extends ActionBarActivity {
 			public void run() {
 				
 				// If there are an equal number of buses to bus markers, just update the appropriate markers
-				if (buses.size() == allBusMarkers.size() && previousZoomLevel == gmap.getCameraPosition().zoom) {
+				if (buses.size() > 0 && buses.size() == allBusMarkers.size() && previousZoomLevel == gmap.getCameraPosition().zoom) {
 					
 					float zoomLevel = gmap.getCameraPosition().zoom;
 					

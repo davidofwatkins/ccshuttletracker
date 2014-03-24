@@ -46,7 +46,7 @@ public class BusManager {
 		this.reconnect = reconnect;
 		unparsedString = getRawData();
 		
-		ArrayList<Bus> buses = null;
+		ArrayList<Bus> buses = new ArrayList<Bus>();
 		int i = 1;
 		while (i <= 3) { //try this at least 3x before giving up in case of network problems
 			try {
@@ -69,10 +69,16 @@ public class BusManager {
 			i++;
 		}
 		
-		if (buses.size() == 0)
+		int numActiveBuses = 0;
+		for (Bus bus : buses) {
+			if (bus.isActive()) { numActiveBuses++; }
+		}
+		
+		if (numActiveBuses == 0) {
 			reporter.reportNoShuttles();
-		else
+		} else {
 			reporter.resetShuttleMessages();
+		}
 		
 		return buses;
 	}
