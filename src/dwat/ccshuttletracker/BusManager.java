@@ -42,7 +42,7 @@ public class BusManager {
 	 * @param reconnect Specifies if new Bus data should be downloaded from the server
 	 * @return the new Buses containing the updated data
 	 */
-	public ArrayList<Bus> updateBusses(Boolean reconnect) {
+	public ArrayList<Bus> updateBuses(Boolean reconnect) {
 		this.reconnect = reconnect;
 		unparsedString = getRawData();
 		
@@ -56,15 +56,15 @@ public class BusManager {
 			}
 			catch (JSONException e) {
 				Log.e("CCShuttleTracker", "Error parsing JSON data");
-				if (i == 3) return buses; //return empty busses array to avoid crash
+				if (i == 3) return buses; //return empty buses array to avoid crash
 			}
 			catch (ParseException e) {
 				Log.e("CCShuttleTracker", "Error parsing shuttle time");
-				if (i == 3) return buses; //return empty busses array to avoid crash
+				if (i == 3) return buses; //return empty buses array to avoid crash
 			}
 			catch (NullPointerException e) {
 				Log.e("CCShuttleTracker", "Unknown error (Null pointer)");
-				if (i == 3) return buses; //return empty busses array to avoid crash
+				if (i == 3) return buses; //return empty buses array to avoid crash
 			}
 			i++;
 		}

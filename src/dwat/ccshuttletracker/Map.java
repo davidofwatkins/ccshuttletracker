@@ -63,7 +63,7 @@ public class Map extends ActionBarActivity {
 	private BusManager bm;
 	private Float previousZoomLevel;
 	private ArrayList<Marker> allBusMarkers;
-	public static ArrayList<Bus> busses;
+	public static ArrayList<Bus> buses;
 	private Timer timer;
 	private static Context context;
 	public final static SimpleDateFormat SDF = new SimpleDateFormat("MMM d, yyyy 'at' h:mm aaa", Locale.US);
@@ -159,7 +159,7 @@ public class Map extends ActionBarActivity {
 					AlertDialog.Builder dialog = new AlertDialog.Builder(context);
 					dialog.setTitle(marker.getTitle() + ": Details");
 					
-					for (Bus bus : busses) {
+					for (Bus bus : buses) {
 						if (bus.getName().equals(marker.getTitle())) {
 							dialog.setMessage("Bus ID: " + bus.getId() +
 									"\nLatitude: " + bus.getLatitude() +
@@ -216,19 +216,19 @@ public class Map extends ActionBarActivity {
 			});
 		}
 		
-		//(Re)initialize the busses array
-		busses = bm.updateBusses(reconnect); // Overwrite the busses array with a fresh set of busses
+		//(Re)initialize the buses array
+		buses = bm.updateBuses(reconnect); // Overwrite the buses array with a fresh set of buses
 		
 		handler.post(new Runnable() {
 			@Override
 			public void run() {
 				
 				// If there are an equal number of buses to bus markers, just update the appropriate markers
-				if (busses.size() == allBusMarkers.size() && previousZoomLevel == gmap.getCameraPosition().zoom) {
+				if (buses.size() == allBusMarkers.size() && previousZoomLevel == gmap.getCameraPosition().zoom) {
 					
 					float zoomLevel = gmap.getCameraPosition().zoom;
 					
-					for (Bus bus : busses) {
+					for (Bus bus : buses) {
 						for (Marker marker : allBusMarkers) {
 							if (bus.getName().equals(marker.getTitle())) {
 								marker.setSnippet(bus.generateSnippet());
@@ -249,7 +249,7 @@ public class Map extends ActionBarActivity {
 					for (MarkerOptions marker : getStopMarkers()) {
 						gmap.addMarker(marker);
 					}
-					for (MarkerOptions marker : getBusMarkers(busses)) {
+					for (MarkerOptions marker : getBusMarkers(buses)) {
 						Marker newMarker = gmap.addMarker(marker);
 						allBusMarkers.add(newMarker);
 					}

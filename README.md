@@ -105,7 +105,7 @@ If you plan to contribute, it may be best to discuss your plans in the "issues" 
 - Added "satelllite view" button
 - Updated schedule data
 - Added new high-resolution icons
-- Added Balloon pop-ups when tapping on busses and stops (https://groups.google.com/group/android-developers/browse_thread/thread/3a33e5a2cd3d6b0d)
+- Added Balloon pop-ups when tapping on buses and stops (https://groups.google.com/group/android-developers/browse_thread/thread/3a33e5a2cd3d6b0d)
 
 ### v1.5:
 

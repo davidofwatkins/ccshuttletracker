@@ -7,7 +7,7 @@ import android.os.Handler;
 
 /**
  * A small class used by the Map to detect when the screen is turned off so that
- * the "No Connection" and/or "No Busses" message will not be
+ * the "No Connection" and/or "No Buses" message will not be
  * displayed when turning the screen back on.
  * 
  * @author David Watkins

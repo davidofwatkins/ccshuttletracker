@@ -68,7 +68,7 @@ public class ErrorReporter {
 				}
 			});
 			
-			Log.w("CCShuttleTracker", "No Active Busses");
+			Log.w("CCShuttleTracker", "No Active Buses");
 			showShuttleErrors = false;
 		}
 	}
