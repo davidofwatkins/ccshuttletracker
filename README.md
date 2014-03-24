@@ -55,7 +55,7 @@ CC Shuttle Tracker uses the [Google Maps API v2](https://developers.google.com/m
 
 If `debug` is true, Crashlytics will be deactivated. To protect your keys, `.gitignore` is set to ignore this file.
 
-## To-Do List
+## Feature Ideas
 
 If you're a part of the Champlain community and would like to contribute to the app, please feel free to fork and pull request. If you'd like a few ideas, here are some features that could improve the app:
 
