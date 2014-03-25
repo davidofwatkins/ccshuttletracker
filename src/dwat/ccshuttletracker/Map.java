@@ -97,7 +97,7 @@ public class Map extends ActionBarActivity {
 		
 		errorReporter = new ErrorReporter(context);
 		gmap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-		gmap.setPadding(0, 100, 0, 0);
+		gmap.setPadding(0, 175, 0, 0);
 
 		// Set the zoom level and center of map
 		if (savedInstanceState == null || savedInstanceState.getBoolean("updated") == false) {
