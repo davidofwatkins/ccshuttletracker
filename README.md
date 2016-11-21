@@ -1,16 +1,16 @@
 # Champlain College Shuttle Tracker <sup>for Android</sup>
 
-**Created and Maintained by:** [David Watkins](http://davidofwatkins.com/) ([@dwat91](https://twitter.com/dwat91), [+David Watkins](https://plus.google.com/104494880066441442910))
+Created and Maintained by [@davidwatkinz](https://twitter.com/davidwatkinz), Champlain '13
 
-
-![Champlain Tracker](assets/ccbus_large.png)
-
-###Summary:
 The Champlain College Shuttle Tracker displays locations of shuttles and buses at Champlain College that are responsible for transportation between campus, Spinner Place, Quarry Hill, and the Gilbane/Lakeside parking lots. It is an unofficial, mobile, and on-the-go alternative to the desktop web tracker, available at [shuttle.champlain.edu](http://shuttle.champlain.edu).
 
 Available on the Play Store, [here](https://play.google.com/store/apps/details?id=dwat.ccshuttletracker):
 
 [![CC Shuttle Tracker](https://developer.android.com/images/brand/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=dwat.ccshuttletracker)
+
+## Want to Help Out?
+
+This was last updated in March, 2014 and is in need of some attention! If you're interested in making this better—particularly if you're a Champlain student—please see [CONTRIBUTING.md](CONTRIBUTING.md). Whether you're a programmer, designer, marketer, or otherwise, any help is appreciated. A side project like this can be a great way to expand your resume, improve your skills, and maybe even improve your day-to-day life if you ride the shuttle frequently with an Android phone :)
 
 ## Project Dependencies
 
@@ -45,13 +45,15 @@ Champlain Tracker runs most easily on [Eclipse](https://www.eclipse.org/) with A
 
 CC Shuttle Tracker uses the [Google Maps API v2](https://developers.google.com/maps/documentation/android/) and [Crashlytics](https://www.crashlytics.com/), both of which require an API key. To add your API keys, define them in `res/values/apikeys.xml` as such:
 
-	<?xml version="1.0" encoding="utf-8"?>
-	<resources>
-	    <string name="googlemaps_key">MY_KEY_HERE</string>
-	    <string name="crashlytics_key">MY_KEY_HERE</string>
-	    <!-- Set debug to true to turn off Crashlytics: -->
-    	<bool name="debug">false</bool>
-	</resources>
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="googlemaps_key">MY_KEY_HERE</string>
+    <string name="crashlytics_key">MY_KEY_HERE</string>
+    <!-- Set debug to true to turn off Crashlytics: -->
+	<bool name="debug">false</bool>
+</resources>
+```
 
 If `debug` is true, Crashlytics will be deactivated. To protect your keys, `.gitignore` is set to ignore this file.
 
